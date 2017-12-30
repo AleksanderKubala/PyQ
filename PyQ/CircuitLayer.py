@@ -24,14 +24,8 @@ class CircuitLayer(object):
         return cleaning
 
     def clean_range(self, begin = 0, end = None):
-        gate_list = set()
-        if end is None: end = len(self.gates)
-        if(begin < 0): begin = 0
-        if(begin >= len(self.gates)): begin = len(self.gates) - 1
-        for i in range(begin, end + 1):
-            if self.gates[i] is not None:
-                gate_list.add(self.gates[i])
-        return self._remove_gates(list(gate_list))
+        gate_list = self.get_gates(begin, end)
+        return self._remove_gates(gate_list)
 
     def clean_slots(self, slot_list):
         gate_list = set()
@@ -56,6 +50,17 @@ class CircuitLayer(object):
         self._add_identities()
         self._calculate_transformation()
         self.is_identity = self._check_identity()
+
+    def get_gates(self, begin = 0, end = None):
+        gate_list = set()
+        if end is None: end = len(self.gates)
+        if begin < 0: begin = 0
+        if begin >= len(self.gates): begin = len(self.gates) - 1
+        for i in range(begin, end + 1):
+            if self.gates[i] is not None:
+                gate_list.add(self.gates[i])
+        return list(gate_list)
+
 
     def _calculate_transformation(self):
         gate_list = []
@@ -89,16 +94,3 @@ class CircuitLayer(object):
             if self.gates[i] is None:
                 self.gates[i] = Gate(CircuitLayer.identity, i, str(CircuitLayer.identity.signature))
 
-    def __str__(self, **kwargs):
-        string = ""
-        slot_number = 0
-        last_gate = None
-        for gate in self.gates:
-            if gate is None:
-                string = string + "Empty\n"
-            else:
-                if gate is last_gate:
-                    string = string + ".\n"
-                else:
-                    string = string + str(gate) + "\n"
-        return string
