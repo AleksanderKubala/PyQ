@@ -61,12 +61,11 @@ class CircuitLayer(object):
                 gate_list.add(self.gates[i])
         return list(gate_list)
 
-
     def _calculate_transformation(self):
         gate_list = []
         last_gate = None
         for gate in self.gates:
-            if (gate is not last_gate):
+            if gate is not last_gate:
                 gate_list.append(gate)
                 last_gate = gate
         self.matrix = gate_list[0].matrix
