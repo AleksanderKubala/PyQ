@@ -32,7 +32,7 @@ class Circuit(object):
         if gate is not None: 
             if gate.first_qubit < 0: raise ValueError("This gate cannot be set on given qubit: {0}.".format(qubits))
             changes.add_removed(layer, self.layers[layer].add_gate(gate))
-            changes.add_added(layer, gate)
+            changes.add_added(layer, (gate,))
         return changes
 
     def remove(self, qubits, layer):

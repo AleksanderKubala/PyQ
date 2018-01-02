@@ -7,6 +7,7 @@ class SwapGateCreator(GateCreator):
         self.size = params
         self.limit = 2**(params - 1)
         self.dimension = self.limit*2
+        self.multi = True
 
     def _compute_mask(self, params):
         eliminator = 1

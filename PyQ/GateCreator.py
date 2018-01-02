@@ -11,13 +11,14 @@ class GateCreator(object):
         self.dimension = 0
         self.limit = 0
         self.offset = 0
+        self.multi = False
 
     def create(self, basegate, params):
         self._set_creator_params(basegate, params)
         eliminator, matcher = self._compute_mask(params)
         group_list = self._create_groups(eliminator, matcher)
         matrix = self._create_gate(basegate, group_list)
-        return GateCreatorResult(matrix, self.size, self.offset)
+        return GateCreatorResult(matrix, self.size, multi=self.multi, offset=self.offset)
 
     def _set_creator_params(self, basegate, params):
         self.basegate_size = basegate.size

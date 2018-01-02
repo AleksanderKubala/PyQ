@@ -53,10 +53,10 @@ class CircuitLayer(object):
 
     def get_gates(self, begin = 0, end = None):
         gate_list = set()
-        if end is None or end > len(self.gates): end = len(self.gates)
+        if end is None or end >= len(self.gates): end = len(self.gates) - 1
         if begin < 0: begin = 0
         if begin >= len(self.gates): begin = len(self.gates) - 1
-        for i in range(begin, end):
+        for i in range(begin, end + 1):
             if self.gates[i] is not None:
                 gate_list.add(self.gates[i])
         return list(gate_list)
