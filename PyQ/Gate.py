@@ -6,7 +6,7 @@ class Gate(object):
         self.info = gateinfo
         self.qubits = qubits
         self.basegate = basegate
-        self.controls = controls
+        self.controls = controls if controls is not None else []
 
     @property
     def last_qubit(self):
