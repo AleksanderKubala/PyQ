@@ -12,9 +12,9 @@ class Circuit(object):
     size_restriction = cfg.SIZE_RESTRICTION
     default_size = cfg.DEFAULT_SIZE
 
-    def __init__(self, register_size:int = cfg.DEFAULT_SIZE):
+    def __init__(self, register_size:int = cfg.DEFAULT_SIZE, layer_count:int = cfg.DEFAULT_LAYER_COUNT):
         matrix_size = 2**register_size
-        self.layer_count = cfg.DEFAULT_LAYER_COUNT
+        self.layer_count = layer_count
         self.size = register_size
         self.register = numpy.matrix(numpy.zeros(shape = (matrix_size, 1)))
         self.register[0] = 1
