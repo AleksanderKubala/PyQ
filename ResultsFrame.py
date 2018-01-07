@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QFrame, QGridLayout, QScrollArea
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QResizeEvent, QPalette
+from PyQt5.QtGui import QPalette
 from ResultLabel import ResultLabel
 from GridFrame import GridFrame
 from ResultLatexLabel import ResultLatexLabel
@@ -18,9 +18,9 @@ class ResultsFrame(QFrame):
         self.layout.setSpacing(0)
         self.layout.setContentsMargins(0, 0, 0, 0)
         self.setLayout(self.layout)
-        self.layout.addWidget(ResultLabel("Amplitudes", shadow = QFrame.Raised), 0, 0)
-        self.layout.addWidget(ResultLabel("Bits", shadow = QFrame.Raised), 0, 1)
-        self.layout.addWidget(ResultLabel("Probability(%)", shadow = QFrame.Raised), 0, 2)
+        self.layout.addWidget(ResultLabel("Amplitudes", shape = QFrame.Panel, shadow = QFrame.Raised), 0, 0)
+        self.layout.addWidget(ResultLabel("Bits", shape = QFrame.Panel, shadow = QFrame.Raised), 0, 1)
+        self.layout.addWidget(ResultLabel("Probability(%)", shape = QFrame.Panel, shadow = QFrame.Raised), 0, 2)
         self.resultsgrid = GridFrame(cols = 3, spacing = 0, margins = (0, 0, 0, 0))
         self.resultsgrid.grid.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         self.scrollArea = QScrollArea(self)
@@ -34,7 +34,7 @@ class ResultsFrame(QFrame):
         for result in results:
             prepared = prepared + self._create_result_row(result)
         return prepared
-        
+
 
     def on_resultsRetrieved(self, results):
         self.resultsgrid.remove_grid_line(0)
@@ -46,21 +46,10 @@ class ResultsFrame(QFrame):
     def _create_result_row(self, result):
         color = self.palette().color(QPalette.Background)
         amplitude = ResultLatexLabel(result.amplitude, color)
-        #amplitude = ResultLabel(latex(sympify(result.amplitude)))
         bits = ResultLabel(str(result.bits), self.width()/self.layout.columnCount())
         probability = ResultLabel(str(result.probability), self.width()/self.layout.columnCount())
         return [amplitude, bits, probability]
 
-    def resizeEvent(self, a0: QResizeEvent):
-
-        self.scrollArea.resize(self.width(), self.height())
-        self.resultsgrid.resize(self.width(), self.height())
-        #column_count = self.layout.columnCount()
-        #for i in range(3, self.resultsgrid.layout().count()):
-        #    item = self.resultgrid.layout().itemAt(i)
-        #    rect = item.geometry()
-        #    rect.setWidth(self.width()//column_count)
-        #    item.setGeometry(rect)
 
 
 

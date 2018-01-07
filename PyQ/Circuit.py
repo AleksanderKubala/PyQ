@@ -89,11 +89,9 @@ class Circuit(object):
         for i in range(2**self.size):
             if self.result.item(i) != 0:
                 amplitude = self.result.item(i)
-                # if type(amplitude) is complex: amplitude = complex(round(amplitude.real, 4), round(amplitude.imag, 4))
-                # else: amplitude = complex(round(amplitude, 4))
                 single_result = "{0:b}".format(i)
                 single_result = "0"*(self.size - len(single_result)) + single_result
-                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
+                results.append(ComputeResult(amplitude, single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
         return results
 
     def get_computed_register(self):

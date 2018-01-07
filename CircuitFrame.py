@@ -1,8 +1,6 @@
 from GridFrame import GridFrame
 from GateSlot import GateSlot
-from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtCore import pyqtSignal, Qt
-from Icons import Icons
 from Addition import Addition
 
 import config
@@ -58,6 +56,7 @@ class CircuitFrame(GridFrame):
         for removal in changes.removed:
             for index in removal[1]:
                 slot = self.grid.itemAt(index*self.size[1] + removal[0]).widget()
+                slot.links.clear()
                 slot.set_state(config.EMPTY)
         for addition in changes.added:
             for i in range(addition[1].first, addition[1].last + 1):
@@ -79,6 +78,9 @@ class CircuitFrame(GridFrame):
 
     def on_gateChanged(self, signature):
         self.current_gate = signature
+        if self.multi_begin is not None:
+            self.deactivate_slot(self.multi_begin)
+            self.multi_begin = None
 
     def on_circuitResized(self, new_size):
         count = new_size - self.size[0]
