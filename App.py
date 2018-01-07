@@ -1,13 +1,14 @@
 from Window import Window
 from CircuitManager import CircuitManager
 from Icons import Icons
-from PyQt5.QtCore import Qt
+from sympy import *
 
 class App(object):
     """description of class"""
 
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__()
+        init_printing()
         Icons.get_icon()
         self.init_circuit()
         self.init_window()

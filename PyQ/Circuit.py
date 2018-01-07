@@ -4,6 +4,7 @@ from PyQ.GateRequest import GateRequest
 from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.CircuitChanges import CircuitChanges
 from PyQ.ComputeResult import ComputeResult
+from sympy import *
 import PyQ.configuration as cfg
 
 class Circuit(object):
@@ -32,7 +33,7 @@ class Circuit(object):
         if gate is not None: 
             if gate.first_qubit < 0: raise ValueError("This gate cannot be set on given qubit: {0}.".format(qubits))
             changes.add_removed(layer, self.layers[layer].add_gate(gate))
-            changes.add_added(layer, (gate,))
+            changes.add_added(layer, gate)
         return changes
 
     def remove(self, qubits, layer):
@@ -88,11 +89,11 @@ class Circuit(object):
         for i in range(2**self.size):
             if self.result.item(i) != 0:
                 amplitude = self.result.item(i)
-                if type(amplitude) is complex: amplitude = complex(round(amplitude.real, 4), round(amplitude.imag, 4))
-                else: amplitude = complex(round(amplitude, 4))
+                # if type(amplitude) is complex: amplitude = complex(round(amplitude.real, 4), round(amplitude.imag, 4))
+                # else: amplitude = complex(round(amplitude, 4))
                 single_result = "{0:b}".format(i)
                 single_result = "0"*(self.size - len(single_result)) + single_result
-                results.append(ComputeResult(str(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
+                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
         return results
 
     def get_computed_register(self):
@@ -106,10 +107,6 @@ class Circuit(object):
     def _clear_register(self, value = 0):
         for i in range(2**self.size):
             self.register[i] = value
-
-    def _normalize(self):
-        rescale = numpy.dot(self.register, self.register.H)
-        self.register = rescale * self.register
 
     def _check_requested_params(self, qubits, layer):
         qubits = [qubits] if type(qubits) is int else qubits

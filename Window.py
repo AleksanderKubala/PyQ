@@ -1,9 +1,6 @@
-from PyQt5.QtWidgets import QMainWindow, QGridLayout, QFrame, QWidget, QPushButton
-from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import QSize
+from PyQt5.QtWidgets import QGridLayout, QFrame, QWidget
 from GateFrame import GateFrame
 from GateButton import GateButton
-from CircuitElement import CircuitElement
 from CircuitFrame import CircuitFrame
 from RegisterFrame import RegisterFrame
 from ActionFrame import ActionFrame
@@ -21,7 +18,7 @@ class Window(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.basegate = GateFrame(cols = 4, spacing = 0, margins = (0, 0, 0, 0))
+        self.basegate = GateFrame(cols = 6, spacing = 0, margins = (0, 0, 0, 0))
         self.basegate.setFrameShape(QFrame.Panel)
         self.basegate.setFrameShadow(QFrame.Sunken)
         self.results = ResultsFrame()
@@ -43,7 +40,7 @@ class Window(QWidget):
         circuit_grid.addWidget(self.register, 0, 1, 3, 1)
         circuit_grid.addWidget(self.circuit, 0, 2, 3, 8)
 
-        names = [config.X, config.Y, config.Z, config.HADAMARD,config.S, config.T, config.CONTROL, config.SWAP]
+        names = [config.X, config.Y, config.Z, config.HADAMARD,config.S, config.S + config.HERM, config.T, config.T + config.HERM, config.CONTROL, config.SWAP]
         buttons = []
         for name in names:
             button = GateButton(name)
@@ -59,8 +56,6 @@ class Window(QWidget):
         grid.addWidget(self.basegate, 0, 0, 1, 3)
         grid.addWidget(self.results, 1, 0, 7, 3)
         grid.addWidget(circuitframe, 0, 3, 6, 9)
-        #grid.addWidget(self.register, 0, 2, 3, 1)
-        #grid.addWidget(self.circuit, 0, 3, 3, 9)
         grid.addWidget(self.actions, 6, 3, 2, 9)
 
         self.setGeometry(300, 300, 1024, 768)

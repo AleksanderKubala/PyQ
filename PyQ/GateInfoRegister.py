@@ -7,6 +7,7 @@ from PyQ.SwapGateCreator import SwapGateCreator as SGC
 from PyQ.Gate import Gate
 from PyQ.Gatename import Gatename
 import numpy
+from sympy import *
 
 
 class GateInfoRegister(object):
@@ -24,7 +25,7 @@ class GateInfoRegister(object):
     def __init__(self):
         if(self._instance is None):
             self.register = {}
-            self.h_factor = 1/(numpy.sqrt(2))
+            self.h_factor = sympify(1/sqrt(2))
             self._initialize_register()
             self._instance = self
 
@@ -32,10 +33,12 @@ class GateInfoRegister(object):
         self.register[Gatename.IDENTITY] = GateInfo(1, numpy.matrix([[1, 0],[0, 1]]), GateSignature(Gatename.IDENTITY), multi=False)
         self.register[Gatename.HADAMARD] = GateInfo(1, self.h_factor*numpy.matrix([[1, 1],[1, -1]]), GateSignature(Gatename.HADAMARD), multi=False, basic=True)
         self.register[Gatename.PAULI_X] = GateInfo(1, numpy.matrix([[0, 1],[1, 0]]), GateSignature(Gatename.PAULI_X), multi=False, basic=True)
-        self.register[Gatename.PAULI_Y] = GateInfo(1, numpy.matrix([[0, -1j],[1j, 0]]), GateSignature(Gatename.PAULI_Y), multi=False, basic=True)
+        self.register[Gatename.PAULI_Y] = GateInfo(1, numpy.matrix([[0, -1*I],[1*I, 0]]), GateSignature(Gatename.PAULI_Y), multi=False, basic=True)
         self.register[Gatename.PAULI_Z] = GateInfo(1, numpy.matrix([[1, 0],[0, -1]]),  GateSignature(Gatename.PAULI_Z), multi=False, basic=True)
-        self.register[Gatename.S] = GateInfo(1, numpy.matrix([[1, 0],[0, 1j]]),  GateSignature(Gatename.S), multi=False, basic=True)
-        self.register[Gatename.T] = GateInfo(1, numpy.matrix([[1, 0],[0, numpy.cos(numpy.pi/4) + 1j*numpy.sin(numpy.pi/4)]]),  GateSignature(Gatename.T), multi=False, basic=True)
+        self.register[Gatename.S] = GateInfo(1, numpy.matrix([[1, 0],[0, 1*I]]),  GateSignature(Gatename.S), multi=False, basic=True)
+        self.register[Gatename.S + '*'] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I]]), GateSignature(Gatename.S + '*'), false, basic=True)
+        self.register[Gatename.T] = GateInfo(1, numpy.matrix([[1, 0],[0, exp((pi/4)*I)]]),  GateSignature(Gatename.T), multi=False, basic=True)
+        self.register[Gatename.T + '*'] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I*exp((pi/4)*I)]]), GateSignature(Gatename.T + '*'), multi=False, basic=True)
         self.register[Gatename.SWAP + "2"] = GateInfo(2, SGC().create(self.register[Gatename.NOT], 2).matrix, GateSignature(Gatename.SWAP, size = "2"), multi=True, basic=True)
         self.register[Gatename.CONTROL + Gatename.NOT] = GateInfo(2, CGC().create(self.register[Gatename.NOT], [-1]).matrix, GateSignature(Gatename.NOT, pre = Gatename.CONTROL), offset = -1, multi=False)
         self.register[Gatename.CONTROL + Gatename.CONTROL + Gatename.NOT] = GateInfo(3, CGC().create(self.register[Gatename.NOT], [-2, -1]).matrix, GateSignature(Gatename.NOT, pre = Gatename.CONTROL + Gatename.CONTROL), offset = -2, multi=False)

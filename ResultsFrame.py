@@ -1,7 +1,11 @@
 from PyQt5.QtWidgets import QFrame, QGridLayout, QScrollArea
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QResizeEvent, QPalette
 from ResultLabel import ResultLabel
 from GridFrame import GridFrame
+from ResultLatexLabel import ResultLatexLabel
+from sympy import *
+
 
 class ResultsFrame(QFrame):
     """description of class"""
@@ -40,9 +44,31 @@ class ResultsFrame(QFrame):
         self.resultsgrid.add_widgets(prepared)
 
     def _create_result_row(self, result):
-        amplitude = ResultLabel(str(result.amplitude))
-        bits = ResultLabel(str(result.bits))
-        probability = ResultLabel(str(result.probability))
+        color = self.palette().color(QPalette.Background)
+        amplitude = ResultLatexLabel(result.amplitude, color)
+        #amplitude = ResultLabel(latex(sympify(result.amplitude)))
+        bits = ResultLabel(str(result.bits), self.width()/self.layout.columnCount())
+        probability = ResultLabel(str(result.probability), self.width()/self.layout.columnCount())
         return [amplitude, bits, probability]
+
+    def resizeEvent(self, a0: QResizeEvent):
+
+        self.scrollArea.resize(self.width(), self.height())
+        self.resultsgrid.resize(self.width(), self.height())
+        #column_count = self.layout.columnCount()
+        #for i in range(3, self.resultsgrid.layout().count()):
+        #    item = self.resultgrid.layout().itemAt(i)
+        #    rect = item.geometry()
+        #    rect.setWidth(self.width()//column_count)
+        #    item.setGeometry(rect)
+
+
+
+
+
+
+
+
+
 
 

@@ -36,10 +36,22 @@ class Icons(object):
             cls._icons[config.S + config.DOWN] = cls._set_icon_maps(config.S_DOWN_ICON, config.S_DOWN_SELECT)
             cls._icons[config.S + config.MID] = cls._set_icon_maps(config.S_MID_ICON, config.S_MID_SELECT)
             cls._icons[config.S + config.UP] = cls._set_icon_maps(config.S_UP_ICON, config.S_UP_SELECT)
+
+            cls._icons[config.S + config.HERM] = cls._set_icon_maps(config.S_HERM_ICON, config.S_HERM_SELECT)
+            cls._icons[config.S + config.HERM + config.DOWN] = cls._set_icon_maps(config.S_HERM_DOWN_ICON, config.S_HERM_DOWN_SELECT)
+            cls._icons[config.S + config.HERM + config.MID] = cls._set_icon_maps(config.S_HERM_MID_ICON, config.S_HERM_MID_SELECT)
+            cls._icons[config.S + config.HERM + config.UP] = cls._set_icon_maps(config.S_HERM_UP_ICON, config.S_HERM_UP_SELECT)
+
             cls._icons[config.T] = cls._set_icon_maps(config.T_ICON, config.T_SELECT)
             cls._icons[config.T + config.DOWN] = cls._set_icon_maps(config.T_DOWN_ICON, config.T_DOWN_SELECT)
             cls._icons[config.T + config.MID] = cls._set_icon_maps(config.T_MID_ICON, config.T_MID_SELECT)
             cls._icons[config.T + config.UP] = cls._set_icon_maps(config.T_UP_ICON, config.T_UP_SELECT)
+
+            cls._icons[config.T + config.HERM] = cls._set_icon_maps(config.T_HERM_ICON, config.T_HERM_SELECT)
+            cls._icons[config.T + config.HERM + config.DOWN] = cls._set_icon_maps(config.T_HERM_DOWN_ICON, config.T_HERM_DOWN_SELECT)
+            cls._icons[config.T + config.HERM + config.MID] = cls._set_icon_maps(config.T_HERM_MID_ICON, config.T_HERM_MID_SELECT)
+            cls._icons[config.T + config.HERM + config.UP] = cls._set_icon_maps(config.T_HERM_UP_ICON, config.T_HERM_UP_SELECT)
+
             cls._icons[config.SWAP] = cls._set_icon_maps(config.SWAP_ICON, config.SWAP_SELECT)
             cls._icons[config.SWAP + config.DOWN] = cls._set_icon_maps(config.SWAP_DOWN_ICON, config.SWAP_DOWN_SELECT)
             cls._icons[config.SWAP + config.MID] = cls._set_icon_maps(config.SWAP_MID_ICON, config.SWAP_MID_SELECT)

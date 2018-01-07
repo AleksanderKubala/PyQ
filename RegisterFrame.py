@@ -1,9 +1,6 @@
 from GridFrame import GridFrame
-from PyQt5.QtGui import QIcon
 from RegisterButton import RegisterButton
-from PyQt5.QtCore import QSize
 from PyQt5.QtCore import pyqtSignal, Qt
-from Icons import Icons
 import config
 
 class RegisterFrame(GridFrame):
@@ -37,7 +34,7 @@ class RegisterFrame(GridFrame):
         return value   
 
     def on_state_change(self):
-        sender = self.sender();
+        sender = self.sender()
         self.register[sender.index] = sender.value
         self.registerChanged.emit(self.register_to_int())
 
