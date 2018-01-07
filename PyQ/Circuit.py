@@ -91,7 +91,7 @@ class Circuit(object):
                 amplitude = self.result.item(i)
                 single_result = "{0:b}".format(i)
                 single_result = "0"*(self.size - len(single_result)) + single_result
-                results.append(ComputeResult(amplitude, single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
+                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
         return results
 
     def get_computed_register(self):
