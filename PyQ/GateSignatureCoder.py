@@ -1,5 +1,5 @@
 from PyQ.GateSignature import GateSignature
-from PyQ.Gatename import Gatename
+from PyQ.Gatename import Gatename, Modifier
 
 class GateSignatureCoder(object):
     """description of class"""
@@ -19,7 +19,7 @@ class GateSignatureCoder(object):
             min_range = min(controls) if min(controls) < 0 else 1
             max_range = max(controls) + 1 if max(controls) > 0 else 0
             for i in range(min_range, max_range):
-                if i in controls: signature = signature + Gatename.CONTROL
+                if i in controls: signature = signature + Modifier.CONTROL
                 else: signature = signature + Gatename.IDENTITY
         return signature
 

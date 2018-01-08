@@ -1,8 +1,12 @@
+class Modifier(object):
+
+    CONTROL = "ctrl"
+    HERMITIAN = "*"
+
 class Gatename(object):
     """description of class"""
 
     IDENTITY = "i"
-    CONTROL = "ctrl"
     HADAMARD = "h"
     PAULI_X = "x"
     PAULI_Y = "y"
@@ -11,3 +15,7 @@ class Gatename(object):
     SWAP = "swap"
     T = "t"
     S = "s"
+    T_HERMITIAN = T + Modifier.HERMITIAN
+    S_HERMITIAN = S + Modifier.HERMITIAN
+
+

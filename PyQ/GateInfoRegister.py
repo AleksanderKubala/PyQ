@@ -5,7 +5,7 @@ from PyQ.GateSignature import GateSignature
 from PyQ.ControledGateCreator import ControledGateCreator as CGC
 from PyQ.SwapGateCreator import SwapGateCreator as SGC
 from PyQ.Gate import Gate
-from PyQ.Gatename import Gatename
+from PyQ.Gatename import Gatename, Modifier
 import numpy
 from sympy import *
 
@@ -36,12 +36,12 @@ class GateInfoRegister(object):
         self.register[Gatename.PAULI_Y] = GateInfo(1, numpy.matrix([[0, -1*I],[1*I, 0]]), GateSignature(Gatename.PAULI_Y), multi=False, basic=True)
         self.register[Gatename.PAULI_Z] = GateInfo(1, numpy.matrix([[1, 0],[0, -1]]),  GateSignature(Gatename.PAULI_Z), multi=False, basic=True)
         self.register[Gatename.S] = GateInfo(1, numpy.matrix([[1, 0],[0, 1*I]]),  GateSignature(Gatename.S), multi=False, basic=True)
-        self.register[Gatename.S + '*'] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I]]), GateSignature(Gatename.S + '*'), false, basic=True)
+        self.register[Gatename.S_HERMITIAN] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I]]), GateSignature(Gatename.S + '*'), false, basic=True)
         self.register[Gatename.T] = GateInfo(1, numpy.matrix([[1, 0],[0, exp((pi/4)*I)]]),  GateSignature(Gatename.T), multi=False, basic=True)
-        self.register[Gatename.T + '*'] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I*exp((pi/4)*I)]]), GateSignature(Gatename.T + '*'), multi=False, basic=True)
+        self.register[Gatename.T_HERMITIAN] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I*exp((pi/4)*I)]]), GateSignature(Gatename.T + '*'), multi=False, basic=True)
         self.register[Gatename.SWAP + "2"] = GateInfo(2, SGC().create(self.register[Gatename.NOT], 2).matrix, GateSignature(Gatename.SWAP, size = "2"), multi=True, basic=True)
-        self.register[Gatename.CONTROL + Gatename.NOT] = GateInfo(2, CGC().create(self.register[Gatename.NOT], [-1]).matrix, GateSignature(Gatename.NOT, pre = Gatename.CONTROL), offset = -1, multi=False)
-        self.register[Gatename.CONTROL + Gatename.CONTROL + Gatename.NOT] = GateInfo(3, CGC().create(self.register[Gatename.NOT], [-2, -1]).matrix, GateSignature(Gatename.NOT, pre = Gatename.CONTROL + Gatename.CONTROL), offset = -2, multi=False)
+        self.register[Modifier.CONTROL + Gatename.NOT] = GateInfo(2, CGC().create(self.register[Gatename.NOT], [-1]).matrix, GateSignature(Gatename.NOT, pre = Modifier.CONTROL), offset = -1, multi=False)
+        self.register[Modifier.CONTROL + Modifier.CONTROL + Gatename.NOT] = GateInfo(3, CGC().create(self.register[Gatename.NOT], [-2, -1]).matrix, GateSignature(Gatename.NOT, pre = Modifier.CONTROL + Modifier.CONTROL), offset = -2, multi=False)
 
 
     def get(self, request):
