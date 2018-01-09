@@ -5,7 +5,7 @@ from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.CircuitChanges import CircuitChanges
 from PyQ.ComputeResult import ComputeResult
 from sympy import *
-import PyQ.configuration as cfg
+import PyQ.config as cfg
 
 class Circuit(object):
     """description of class"""

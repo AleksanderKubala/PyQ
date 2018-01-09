@@ -1,4 +1,4 @@
-from PyQ import configuration
+from PyQ import config
 from PyQ.Gatename import Gatename
 
 #..........results display............
@@ -17,9 +17,9 @@ icon_select = "_select"
 icon_extension = ".bmp"
 
 #...........circuit settings..............
-INITIAL_QUBITS = configuration.DEFAULT_SIZE
-INITIAL_LAYERS_COUNT = configuration.DEFAULT_LAYER_COUNT
-SIZE_RESTRICTION = configuration.SIZE_RESTRICTION
+INITIAL_QUBITS = config.DEFAULT_SIZE
+INITIAL_LAYERS_COUNT = config.DEFAULT_LAYER_COUNT
+SIZE_RESTRICTION = config.SIZE_RESTRICTION
 
 #...............slot states...............
 HADAMARD = Gatename.HADAMARD
