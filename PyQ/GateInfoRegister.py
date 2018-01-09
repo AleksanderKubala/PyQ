@@ -31,10 +31,10 @@ class GateInfoRegister(object):
 
     def _initialize_register(self):
         self.register[Gatename.IDENTITY] = GateInfo(1, numpy.matrix([[1, 0],[0, 1]]), GateSignature(Gatename.IDENTITY), multi=False)
-        self.register[Gatename.HADAMARD] = GateInfo(1, self.h_factor*numpy.matrix([[1, 1],[1, -1]]), GateSignature(Gatename.HADAMARD), multi=False, basic=True)
-        self.register[Gatename.PAULI_X] = GateInfo(1, numpy.matrix([[0, 1],[1, 0]]), GateSignature(Gatename.PAULI_X), multi=False, basic=True)
-        self.register[Gatename.PAULI_Y] = GateInfo(1, numpy.matrix([[0, -1*I],[1*I, 0]]), GateSignature(Gatename.PAULI_Y), multi=False, basic=True)
-        self.register[Gatename.PAULI_Z] = GateInfo(1, numpy.matrix([[1, 0],[0, -1]]),  GateSignature(Gatename.PAULI_Z), multi=False, basic=True)
+        self.register[Gatename.H] = GateInfo(1, self.h_factor * numpy.matrix([[1, 1], [1, -1]]), GateSignature(Gatename.H), multi=False, basic=True)
+        self.register[Gatename.X] = GateInfo(1, numpy.matrix([[0, 1], [1, 0]]), GateSignature(Gatename.X), multi=False, basic=True)
+        self.register[Gatename.Y] = GateInfo(1, numpy.matrix([[0, -1 * I], [1 * I, 0]]), GateSignature(Gatename.Y), multi=False, basic=True)
+        self.register[Gatename.Z] = GateInfo(1, numpy.matrix([[1, 0], [0, -1]]), GateSignature(Gatename.Z), multi=False, basic=True)
         self.register[Gatename.S] = GateInfo(1, numpy.matrix([[1, 0],[0, 1*I]]),  GateSignature(Gatename.S), multi=False, basic=True)
         self.register[Gatename.S_HERMITIAN] = GateInfo(1, numpy.matrix([[1, 0],[0, -1*I]]), GateSignature(Gatename.S + '*'), false, basic=True)
         self.register[Gatename.T] = GateInfo(1, numpy.matrix([[1, 0],[0, exp((pi/4)*I)]]),  GateSignature(Gatename.T), multi=False, basic=True)

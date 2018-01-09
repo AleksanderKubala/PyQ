@@ -22,10 +22,10 @@ INITIAL_LAYERS_COUNT = config.DEFAULT_LAYER_COUNT
 SIZE_RESTRICTION = config.SIZE_RESTRICTION
 
 #...............slot states...............
-HADAMARD = Gatename.HADAMARD
-X = Gatename.PAULI_X
-Y = Gatename.PAULI_Y
-Z = Gatename.PAULI_Z
+HADAMARD = Gatename.H
+X = Gatename.X
+Y = Gatename.Y
+Z = Gatename.Z
 S = Gatename.S
 T = Gatename.T
 SWAP = Gatename.SWAP

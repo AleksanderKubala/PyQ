@@ -7,11 +7,11 @@ class Gatename(object):
     """description of class"""
 
     IDENTITY = "i"
-    HADAMARD = "h"
-    PAULI_X = "x"
-    PAULI_Y = "y"
-    PAULI_Z = "z"
-    NOT = PAULI_X
+    H = "h"
+    X = "x"
+    Y = "y"
+    Z = "z"
+    NOT = X
     SWAP = "swap"
     T = "t"
     S = "s"
