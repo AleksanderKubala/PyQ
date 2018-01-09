@@ -51,13 +51,13 @@ class GateInfoRegister(object):
             result = self._call_creator(request)
             if result is None:  
                 return None
-            gateinfo = self.add(request, result, signature)
+            gateinfo = self._add(request, result, signature)
         pre, post = [], []
         qubits = [request.qubit] if request.size == 1 else [request.qubit, request.qubit + request.size - 1]
         controls = [pre + qubits[0] for pre in request.controls[0]] + [post + qubits[-1] for post in request.controls[1]]
         return Gate(gateinfo, qubits, request.gate, controls)
 
-    def add(self, request, result, signature):
+    def _add(self, request, result, signature):
         gateinfo = GateInfo(result.size, result.matrix, signature, multi=result.multi, offset=result.offset)
         self.register[str(signature)] = gateinfo
         return gateinfo

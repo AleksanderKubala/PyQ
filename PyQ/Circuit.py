@@ -94,9 +94,6 @@ class Circuit(object):
                 results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
         return results
 
-    def get_computed_register(self):
-        return self.result
-
     def _update_layers(self):
         for layer in self.layers:
             if layer.outdated:
