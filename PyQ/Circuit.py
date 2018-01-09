@@ -14,6 +14,10 @@ class Circuit(object):
     default_size = cfg.DEFAULT_SIZE
 
     def __init__(self, register_size:int = cfg.DEFAULT_SIZE, layer_count:int = cfg.DEFAULT_LAYER_COUNT):
+        if register_size < 1 or register_size > cfg.SIZE_RESTRICTION:
+            register_size = cfg.DEFAULT_SIZE
+        if layer_count < 1 or layer_count > cfg.LAYER_RESTRICTION:
+            layer_count = cfg.DEFAULT_LAYER_COUNT
         matrix_size = 2**register_size
         self.layer_count = layer_count
         self.size = register_size
