@@ -59,17 +59,23 @@ class CircuitFrame(GridFrame):
                 slot.links.clear()
                 slot.set_state(config.EMPTY)
         for addition in changes.added:
+            slots = []
+            j = 0
+            for i in range(addition[1].first, addition[1].last + 1):
+                slots.append(self.grid.itemAt(i*self.size[1] + addition[1].layer).widget())
+            self.link_slots(slots)
             for i in range(addition[1].first, addition[1].last + 1):
                 if addition[1].first != addition[1].last:
                     if i == addition[1].first: modifier = config.DOWN
                     elif i < addition[1].last: modifier = config.MID
                     else: modifier = config.UP
                 else: modifier = ""
-                slot = self.grid.itemAt(i*self.size[1] + addition[1].layer).widget()
+                slot = slots[j]
                 self.deactivate_slot(slot)
                 if slot.row in addition[1].controls: slot.set_state(config.CONTROL, modifier)
                 elif slot.row in addition[1].qubits: slot.set_state(addition[1].basegate, modifier)
                 else: slot.set_state(config.EMPTY, modifier)
+                j += 1
 
     def deactivate_slot(self, slot):
         slot.frozen = False
@@ -99,7 +105,6 @@ class CircuitFrame(GridFrame):
         else:
             if source.col == self.multi_begin.col:
                 if source.row != self.multi_begin.row:
-                    self.link_slots(source)
                     qubits, controls = self.get_controls_and_qubits(source)
                     if self.current_gate != config.SWAP:
                         request = Addition(self.multi_begin.state, qubits, self.multi_begin.col, controls)
@@ -109,12 +114,10 @@ class CircuitFrame(GridFrame):
                     self.multi_begin = None
                     self.additionRequested.emit(request)
 
-    def link_slots(self, end):
-        end.links.add(self.multi_begin)
-        for link in self.multi_begin.links:
-            end.links.add(link)
-            link.links.add(end)
-        self.multi_begin.links.add(end)
+    def link_slots(self, slots):
+        for slot in slots:
+            for slot_ in slots:
+                slot.links.add(slot_)
 
     def get_controls_and_qubits(self, end):
         qubits, controls = [], []
