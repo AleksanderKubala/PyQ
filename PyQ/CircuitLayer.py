@@ -44,6 +44,7 @@ class CircuitLayer(object):
             cleaning = self.clean_slots(tuple(i for i in range(new_size, current_size)))
             for i in range(new_size, current_size):
                 self.gates.pop()
+        self.outdated = True
         return cleaning
 
     def update(self):
