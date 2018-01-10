@@ -1,7 +1,7 @@
 class GateRequest(object):
     
     def __init__(self, gate, qubit, size = 1, controls = None):
-        self.gate = gate;
+        self.gate = gate
         self.qubit = qubit
         self._size(size)
         self._controls(controls)

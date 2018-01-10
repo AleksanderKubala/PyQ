@@ -33,7 +33,7 @@ class Circuit(object):
         self.result = self.register.copy()
 
     def add(self, gate, qubits, layer, controls = None):
-        qubits = self._check_requested_params(qubits, layer)
+        qubits, layer = self._check_requested_params(qubits, layer)
         size = max(qubits) - min(qubits) + 1
         request = GateRequest(gate, min(qubits), size, controls)
         gate = GateInfoRegister.instance().get(request)
@@ -45,7 +45,7 @@ class Circuit(object):
         return changes
 
     def remove(self, qubits, layer):
-        qubits = self._check_requested_params(qubits, layer)
+        qubits, layer = self._check_requested_params(qubits, layer)
         changes = CircuitChanges()
         changes.add_removed(layer, self.layers[layer].clean_slots(qubits))
         return changes
@@ -113,11 +113,12 @@ class Circuit(object):
 
     def _check_requested_params(self, qubits, layer):
         qubits = [qubits] if type(qubits) is int else qubits
+        layer = [layer] if type(layer) is int else layer
         first = min(qubits)
         last = max(qubits)
         if first < 0 or last >= self.size: raise ValueError("invalid qubit number: {0}".format(qubits))
-        if layer < 0 or layer >= self.layer_count: raise ValueError("invalid layer number: {0}".format(layer))
-        return qubits
+        if layer[0] < 0 or layer[0] >= self.layer_count: raise ValueError("invalid layer number: {0}".format(layer[0]))
+        return qubits, layer[0]
 
         
        

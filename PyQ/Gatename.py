@@ -1,6 +1,6 @@
 class Modifier(object):
 
-    CONTROL = "ctrl"
+    CONTROL = "c"
     HERMITIAN = "*"
 
 class Gatename(object):
