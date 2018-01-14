@@ -40,7 +40,7 @@ class Window(QWidget):
         circuit_grid.addWidget(self.register, 0, 1, 3, 1)
         circuit_grid.addWidget(self.circuit, 0, 2, 3, 8)
 
-        names = [config.X, config.Y, config.Z, config.HADAMARD,config.S, config.S + config.HERM, config.T, config.T + config.HERM, config.CONTROL, config.SWAP]
+        names = [config.X, config.Y, config.Z, config.HADAMARD,config.S, config.S + config.HERM, config.T, config.T + config.HERM, config.SWAP, config.CONTROL]
         buttons = []
         for name in names:
             button = GateButton(name)

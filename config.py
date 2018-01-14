@@ -30,7 +30,7 @@ S = Gatename.S
 T = Gatename.T
 SWAP = Gatename.SWAP
 # do przerobienia na uwzględnianie różnych control icons'
-CONTROL = "CRTL"
+CONTROL = "CTRL"
 UP = "_U"
 DOWN = "_D"
 MID = "_M"
