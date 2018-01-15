@@ -17,5 +17,8 @@ class Gatename(object):
     S = "s"
     T_HERMITIAN = T + Modifier.HERMITIAN
     S_HERMITIAN = S + Modifier.HERMITIAN
+    MEASUREMENT = "m"
+
+
 
 

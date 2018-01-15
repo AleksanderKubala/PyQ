@@ -25,7 +25,9 @@ class App(object):
     
         self.window.basegate.gateChanged.connect(self.window.circuit.on_gateChanged)
         self.window.register.registerChanged.connect(self.circuit_manager.on_register_change)
-        self.window.actions.computeCircuit.connect(self.circuit_manager.on_compute)
+        self.window.actions.runSimulation.connect(self.circuit_manager.on_run_simulation)
+        self.window.actions.nextStep.connect(self.circuit_manager.on_next_step)
+        self.window.actions.stopSimulation.connect(self.circuit_manager.on_stop_simulation)
         self.window.actions.qubitCountChange.connect(self.window.register.on_qubitCountChange)
         self.window.register.registerResized.connect(self.circuit_manager.on_register_resized)
         self.window.circuit.removalRequested.connect(self.circuit_manager.on_removal_request)

@@ -31,6 +31,9 @@ class Circuit(object):
         self.layers = [CircuitLayer(register_size) for i in range(self.layer_count)]
         self.transformation = numpy.matrix(numpy.identity(matrix_size))
         self.result = self.register.copy()
+        self.next_step = 1
+        self.running = False
+        self.measured = ['?']*self.size
 
     def add(self, gate, qubits, layer, controls = None):
         qubits, layer = self._check_requested_params(qubits, layer)
@@ -49,17 +52,33 @@ class Circuit(object):
         changes = CircuitChanges()
         changes.add_removed(layer, self.layers[layer].clean_slots(qubits))
         return changes
-        
-    def compute(self, time = 0):
+
+    def next(self):
+        if self.running is False:
+            self.start(1)
+        else:
+            layer = self.layers[self.next_step - 1]
+            if not layer.is_identity:
+                self.result = numpy.dot(layer.transformation, self.result)
+            elif layer.has_measurements():
+                measurement = layer.measure(self.result)
+                self.result = measurement.state
+                for i in range(len(measurement.bit_number)):
+                    self.measured[measurement.bit_number[i]] = measurement.value[i]
+            self.next_step += 1
+            if self.next_step > self.layer_count:
+                self.stop()
+
+    def start(self, time = 0):
+        self.running = True
         if (time <= 0) or (time > self.layer_count): time = self.layer_count
-        self._update_layers()
-        matrix = numpy.matrix(numpy.identity(2**self.size))
-        for i in range(time - 1, -1, -1):
-            if not self.layers[i].is_identity:
-                matrix = numpy.matrix(numpy.dot(matrix, self.layers[i].matrix))
-        self.transformation = matrix
-        self.result = numpy.dot(self.transformation, self.register)
-        return self.get_results()
+        self.result = self.register.copy()
+        self.next_step = 1
+        while (self.next_step <= time) and (self.next_step <= self.layer_count):
+            self.next()
+
+    def stop(self):
+        self.running = False
 
     def resize(self, new_size):
         changes = CircuitChanges()
@@ -73,6 +92,7 @@ class Circuit(object):
                 self.register.resize((2**new_size, 1), refcheck = False)
                 self.set_register(self.current_state << (new_size - self.size))
             self.size = new_size
+            self.measured = ['?']*self.size
             for i in range(len(self.layers)):
                 changes.add_removed(i, self.layers[i].resize(new_size))
         return changes
@@ -101,11 +121,6 @@ class Circuit(object):
                 single_result = "0"*(self.size - len(single_result)) + single_result
                 results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
         return results
-
-    def _update_layers(self):
-        for layer in self.layers:
-            if layer.outdated:
-                layer.update()
 
     def _clear_register(self, value = 0):
         for i in range(2**self.size):

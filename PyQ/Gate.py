@@ -17,12 +17,12 @@ class Gate(object):
         return self.info.size
 
     @property
-    def matrix(self):
-        return self.info.matrix
-
-    @property
     def signature(self):
         return str(self.info.signature)
+
+    @property
+    def transformation(self):
+        return self.info.transformation
 
     @property
     def offset(self):
@@ -31,6 +31,13 @@ class Gate(object):
     @property
     def first_qubit(self):
         return self.qubits[0] + self.info.offset
+
+    @property
+    def is_measurement(self):
+        return self.info.is_measurement
+
+    def set_transformation(self, arg=None):
+        return self.info.set_transformation(arg)
 
     def __hash__(self):
         return hash(id(self))

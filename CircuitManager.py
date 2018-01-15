@@ -9,19 +9,25 @@ class CircuitManager(QObject):
     circuitResized = pyqtSignal(int)
     circuitChangeFailed = pyqtSignal(str, object)
     resultsRetrieved = pyqtSignal(object)
+    simulationStarted = pyqtSignal()
+    simulationStopped = pyqtSignal()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs) 
-        self.prepare_circuit()
-        
-
-    def prepare_circuit(self):
         self.circuit = Circuit()
-        self.circuit.compute()
 
-    def on_compute(self, step):
-        results = self.circuit.compute(step)
+    def on_run_simulation(self, time):
+        self.circuit.start(time)
+        results = self.circuit.get_results()
         self.resultsRetrieved.emit(results)
+
+    def on_next_step(self):
+        self.circuit.next()
+        results = self.circuit.get_results()
+        self.resultsRetrieved.emit(results)
+
+    def on_stop_simulation(self):
+        self.circuit.stop()
 
     def on_register_change(self, value):
         self.circuit.set_register(value)

@@ -1,7 +1,10 @@
 import numpy
+import sympy
+import random
 from PyQ.Gate import Gate
 from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.Gatename import Gatename
+from PyQ.MeasurementResult import MeasurementResult
 
 
 class CircuitLayer(object):
@@ -10,17 +13,18 @@ class CircuitLayer(object):
     identity = GateInfoRegister.instance().register[Gatename.IDENTITY]
 
     def __init__(self, register_size):
-        self.outdated = False
         self.is_identity = True
         self.gates = [Gate(CircuitLayer.identity, i, str(CircuitLayer.identity.signature)) for i in range(register_size)]
+        self.measurement_slots = []
         self.update()
 
     def add_gate(self, gate):
         cleaning = self.clean_range(gate.first_qubit, gate.last_qubit)
         for i in range(gate.first_qubit, gate.last_qubit + 1):
             self.gates[i] = gate
-        self._add_identities()
-        self.outdated = True
+            if gate.is_measurement:
+                self.measurement_slots.append(gate.first_qubit)
+        self.update()
         return cleaning
 
     def clean_range(self, begin = 0, end = None):
@@ -44,13 +48,15 @@ class CircuitLayer(object):
             cleaning = self.clean_slots(tuple(i for i in range(new_size, current_size)))
             for i in range(new_size, current_size):
                 self.gates.pop()
-        self.outdated = True
+        self.update()
         return cleaning
 
     def update(self):
+        self.measurement_slots.sort()
         self._add_identities()
-        self._calculate_transformation()
-        self.is_identity = self._check_identity()
+        if self.has_measurements() is False:
+            self._calculate_transformation()
+            self.is_identity = self._check_identity()
 
     def get_gates(self, begin = 0, end = None):
         gate_list = set()
@@ -62,6 +68,37 @@ class CircuitLayer(object):
                 gate_list.add(self.gates[i])
         return list(gate_list)
 
+    def has_measurements(self):
+        if len(self.measurement_slots) > 0:
+            return True
+        else:
+            return False
+
+    def measure(self, register):
+        measurements = self._calculate_measurements(register)
+        probabilities = [numpy.dot(register.transpose(), measurement[1]) for measurement in measurements]
+        bound = 0
+        roll = random.uniform(0, 1)
+        for i in range(0, len(probabilities)):
+            bound = bound + probabilities[i]
+            if roll <= bound:
+                state = (measurements[i])[1]/sympy.sqrt(probabilities[i])
+                return MeasurementResult(state, self.measurement_slots, (measurements[i])[0])
+
+    def _calculate_measurements(self, register):
+        measurements = []
+        shift = 0
+        measurement_count = len(self.measurement_slots)
+        for i in range(2**measurement_count):
+            bit_value = ''
+            for j in range(measurement_count - 1, -1, -1):
+                projection = i & (1 << (measurement_count - 1 - j))
+                self.gates[self.measurement_slots[j]].set_transformation(projection)
+                bit_value = str(projection) + bit_value
+            self._calculate_transformation()
+            measurements.append((bit_value, numpy.dot(self.transformation, register)))
+        return measurements
+
     def _calculate_transformation(self):
         gate_list = []
         last_gate = None
@@ -69,14 +106,13 @@ class CircuitLayer(object):
             if gate is not last_gate:
                 gate_list.append(gate)
                 last_gate = gate
-        self.matrix = gate_list[0].matrix
+        self.transformation = gate_list[0].transformation
         gate_list.pop(0)
         for gate in gate_list:
-            self.matrix = numpy.kron(self.matrix, gate.matrix)
-        self.outdated = False
+            self.transformation = numpy.kron(self.transformation, gate.transformation)
 
     def _check_identity(self):
-        return (self.matrix == numpy.identity(self.matrix.shape[0])).all()
+        return (self.transformation == numpy.identity(self.transformation.shape[0])).all()
                 
     def _remove_gates(self, gate_list):
         indices_list = list()
@@ -85,8 +121,10 @@ class CircuitLayer(object):
                 for i in range(gate.first_qubit, gate.last_qubit + 1):
                     indices_list.append(i)
             for index in indices_list:
+                if self.gates[index].is_measurement:
+                    self.measurement_slots.remove(self.gates[index].first_qubit)
                 self.gates[index] = None
-        self.outdated = True
+        self.update()
         return indices_list
 
     def _add_identities(self):

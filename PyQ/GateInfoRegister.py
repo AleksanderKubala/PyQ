@@ -23,13 +23,14 @@ class GateInfoRegister(object):
     _ic = 'ic'
 
     def __init__(self):
-        if(self._instance is None):
+        if self._instance is None:
             self.register = {}
             self.h_factor = sympify(1/sqrt(2))
             self._initialize_register()
             self._instance = self
 
     def _initialize_register(self):
+        self.register[Gatename.MEASUREMENT] = GateInfo(1, [numpy.matrix([[1, 0], [0, 0]]), numpy.matrix([[0, 0], [0, 1]])], Gatename.MEASUREMENT, multi=False, basic=True, is_measurement=True)
         self.register[Gatename.IDENTITY] = GateInfo(1, numpy.matrix([[1, 0],[0, 1]]), GateSignature(Gatename.IDENTITY), multi=False)
         self.register[Gatename.H] = GateInfo(1, self.h_factor * numpy.matrix([[1, 1], [1, -1]]), GateSignature(Gatename.H), multi=False, basic=True)
         self.register[Gatename.X] = GateInfo(1, numpy.matrix([[0, 1], [1, 0]]), GateSignature(Gatename.X), multi=False, basic=True)
@@ -43,19 +44,20 @@ class GateInfoRegister(object):
         self.register[Modifier.CONTROL + Gatename.NOT] = GateInfo(2, CGC().create(self.register[Gatename.NOT], [-1]).matrix, GateSignature(Gatename.NOT, pre = Modifier.CONTROL), offset = -1, multi=False)
         self.register[Modifier.CONTROL + Modifier.CONTROL + Gatename.NOT] = GateInfo(3, CGC().create(self.register[Gatename.NOT], [-2, -1]).matrix, GateSignature(Gatename.NOT, pre = Modifier.CONTROL + Modifier.CONTROL), offset = -2, multi=False)
 
-
     def get(self, request):
-        signature = GSC.encode(request)
-        gateinfo = self._check_register(signature)
-        if gateinfo is None:
-            result = self._call_creator(request)
-            if result is None:  
-                return None
-            gateinfo = self._add(request, result, signature)
-        pre, post = [], []
-        qubits = [request.qubit] if request.size == 1 else [request.qubit, request.qubit + request.size - 1]
-        controls = [pre + qubits[0] for pre in request.controls[0]] + [post + qubits[-1] for post in request.controls[1]]
-        return Gate(gateinfo, qubits, request.gate, controls)
+        if request.gate == Gatename.MEASUREMENT:
+            return Gate(self._check_register(request.gate), request.qubit, request.gate)
+        else:
+            signature = GSC.encode(request)
+            gateinfo = self._check_register(signature)
+            if gateinfo is None:
+                result = self._call_creator(request)
+                if result is None:
+                    return None
+                gateinfo = self._add(request, result, signature)
+            qubits = [request.qubit] if request.size == 1 else [request.qubit, request.qubit + request.size - 1]
+            controls = [pre + qubits[0] for pre in request.controls[0]] + [post + qubits[-1] for post in request.controls[1]]
+            return Gate(gateinfo, qubits, request.gate, controls)
 
     def _add(self, request, result, signature):
         gateinfo = GateInfo(result.size, result.matrix, signature, multi=result.multi, offset=result.offset)

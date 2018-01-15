@@ -5,7 +5,7 @@ class GateCreator(object):
     """description of class"""
 
     def __init__(self, **kwargs):
-        self.basegate_size = 0;
+        self.basegate_size = 0
         self.basegate_dim = 0
         self.size = 0
         self.dimension = 0
@@ -41,7 +41,7 @@ class GateCreator(object):
         for group in group_list:
             for i in range(self.basegate_dim):
                 for j in range(self.basegate_dim):
-                    output[group[i]][group[j]] = basegate.matrix.item((i, j))
+                    output[group[i]][group[j]] = basegate.transformation.item((i, j))
         return output
 
     def _set_custom_params(self, basegate, params):
