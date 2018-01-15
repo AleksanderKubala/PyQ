@@ -102,7 +102,7 @@ class CircuitFrame(GridFrame):
 
     def set_multi_qubit_gate(self, source):
         if self.multi_begin is None:
-            if source.state != config.EMPTY or self.current_gate == config.SWAP:
+            if source.state != config.EMPTY or self.current_gate == config.SWAP or source.state != config.MEASUREMENT:
                     self.multi_begin = self.get_base(source)
                     source.frozen = True
         else:

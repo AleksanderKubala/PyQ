@@ -29,6 +29,7 @@ Z = Gatename.Z
 S = Gatename.S
 T = Gatename.T
 SWAP = Gatename.SWAP
+MEASUREMENT = Gatename.MEASUREMENT
 # do przerobienia na uwzględnianie różnych control icons'
 CONTROL = "CTRL"
 UP = "_U"
@@ -39,6 +40,9 @@ ZERO = "0"
 ONE = "1"
 NONE = ""
 HERM = "*"
+
+QUANTUM = "quantum"
+CLASSICAL = "classical"
 
 #................icons...................
 HADAMARD_ICON = icon_path + "hadamard" + icon_extension
@@ -61,22 +65,18 @@ S_ICON = icon_path + "s" + icon_extension
 S_DOWN_ICON = icon_path + "s_down" + icon_extension 
 S_MID_ICON = icon_path + "s_mid" + icon_extension
 S_UP_ICON = icon_path + "s_up" + icon_extension
-
 S_HERM_ICON = icon_path + "s_herm" + icon_extension
 S_HERM_DOWN_ICON = icon_path + "s_herm_down" + icon_extension
 S_HERM_MID_ICON = icon_path + "s_herm_mid" + icon_extension
 S_HERM_UP_ICON = icon_path + "s_herm_up" + icon_extension
-
 T_ICON = icon_path + "t" + icon_extension
 T_DOWN_ICON = icon_path + "t_down" + icon_extension
 T_MID_ICON = icon_path + "t_mid" + icon_extension
 T_UP_ICON = icon_path + "t_up" + icon_extension
-
 T_HERM_ICON = icon_path + "t_herm" + icon_extension
 T_HERM_DOWN_ICON = icon_path + "t_herm_down" + icon_extension
 T_HERM_MID_ICON = icon_path + "t_herm_mid" + icon_extension
 T_HERM_UP_ICON = icon_path + "t_herm_up" + icon_extension
-
 SWAP_ICON = icon_path + "swap" + icon_extension
 SWAP_DOWN_ICON = icon_path + "swap_down" + icon_extension
 SWAP_MID_ICON = icon_path + "swap_mid" + icon_extension
@@ -87,7 +87,8 @@ CONTROL_UP_ICON = icon_path + "control_up" + icon_extension
 EMPTY_ICON = icon_path + "empty" + icon_extension 
 EMPTY_MID_ICON = icon_path + "empty_mid" + icon_extension
 ZERO_ICON = icon_path + "zero" + icon_extension 
-ONE_ICON = icon_path + "one" + icon_extension 
+ONE_ICON = icon_path + "one" + icon_extension
+MEASUREMENT_ICON = icon_path + "measurement" + icon_extension
 
 #..........icons select................
 HADAMARD_SELECT = icon_path + "hadamard" + icon_select + icon_extension
@@ -110,22 +111,18 @@ S_SELECT = icon_path + "s" + icon_select + icon_extension
 S_DOWN_SELECT = icon_path + "s_down" + icon_select + icon_extension 
 S_MID_SELECT = icon_path + "s_mid" + icon_select + icon_extension
 S_UP_SELECT = icon_path + "s_up" + icon_select + icon_extension
-
 S_HERM_SELECT = icon_path + "s_herm" + icon_select + icon_extension
 S_HERM_DOWN_SELECT = icon_path + "s_herm_down" + icon_select + icon_extension
 S_HERM_MID_SELECT = icon_path + "s_herm_mid" + icon_select + icon_extension
 S_HERM_UP_SELECT = icon_path + "s_herm_up" + icon_select + icon_extension
-
 T_SELECT = icon_path + "t" + icon_select + icon_extension 
 T_DOWN_SELECT = icon_path + "t_down" + icon_select + icon_extension 
 T_MID_SELECT = icon_path + "t_mid" + icon_select + icon_extension 
 T_UP_SELECT = icon_path + "t_up" + icon_select + icon_extension
-
 T_HERM_SELECT = icon_path + "t_herm" + icon_select + icon_extension
 T_HERM_DOWN_SELECT = icon_path + "t_herm_down" + icon_select + icon_extension
 T_HERM_MID_SELECT = icon_path + "t_herm_mid" + icon_select + icon_extension
 T_HERM_UP_SELECT = icon_path + "t_herm_up" + icon_select + icon_extension
-
 SWAP_SELECT = icon_path + "swap" + icon_select + icon_extension
 SWAP_DOWN_SELECT = icon_path + "swap_down" + icon_select + icon_extension
 SWAP_MID_SELECT = icon_path + "swap_mid" + icon_select + icon_extension
@@ -137,3 +134,4 @@ EMPTY_SELECT = icon_path + "empty" + icon_select + icon_extension
 EMPTY_MID_SELECT = icon_path + "empty_mid" + icon_select + icon_extension
 ZERO_SELECT = icon_path + "zero" + icon_select + icon_extension
 ONE_SELECT = icon_path + "one" + icon_select + icon_extension
+MEASUREMENT_SELECT = icon_path + "measurement" + icon_select + icon_extension
