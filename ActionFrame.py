@@ -1,5 +1,5 @@
 from GridFrame import GridFrame
-from PyQt5.QtWidgets import QPushButton, QLineEdit
+from PyQt5.QtWidgets import QPushButton, QLineEdit, QLabel
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtCore import pyqtSignal
 import config
@@ -40,6 +40,15 @@ class ActionFrame(GridFrame):
         self.stop.released.connect(self.on_stop_release)
         self.grid.addWidget(self.stop, 2, 1, 1, 1)
 
+        self.status = QLabel("Status: " + self.simulation_status)
+        self.grid.addWidget(self.status, 3, 0, 1, 1,)
+
+        self.step = QLabel("Step: " + self.current_step)
+        self.grid.addWidget(self.step, 4, 0, 1, 1)
+
+        self.total = QLabel("Total: " + self.total_steps)
+        self.grid.addWidget(self.total, 4, 1, 1, 1)
+
         self.resize = QPushButton("Resize Register")
         self.resize.released.connect(self.on_resize_release)
         self.grid.addWidget(self.resize, 0, 2, 1, 1)
@@ -53,19 +62,32 @@ class ActionFrame(GridFrame):
         self.stopped()
 
     def on_run_release(self):
-        self.running()
         self.runSimulation.emit(0)
 
     def on_manual_release(self):
-        self.running()
         self.runSimulation.emit(int(self.start_step.text()))
 
     def on_next_release(self):
         self.nextStep.emit()
 
     def on_stop_release(self):
-        self.stopped()
         self.stopSimulation.emit()
+
+    def on_simulation_start(self):
+        self.running()
+
+    def on_simulation_update(self, status, step, total):
+        self.set_simulation_status(status)
+        self.current_step = step
+        self.total_steps = total
+        self.update_labels()
+
+    def on_simulation_end(self):
+        self.simulation_status = "-"
+        self.current_step = "-"
+        self.total_steps = "-"
+        self.stopped()
+        self.update_labels()
 
     def on_step_changed(self):
         result = self.start_step.validator().validate(self.start_step.text(), 0)
@@ -87,13 +109,23 @@ class ActionFrame(GridFrame):
         self.next.setDisabled(False)
         self.stop.setDisabled(False)
 
-
     def stopped(self):
         self.run.setDisabled(False)
         self.manual.setDisabled(False)
         self.resize.setDisabled(False)
         self.next.setDisabled(True)
         self.stop.setDisabled(True)
+
+    def set_simulation_status(self, status):
+        if status:
+            self.simulation_status = "Running..."
+        else:
+            self.simulation_status = "-"
+
+    def update_labels(self):
+        self.status.setText("Status: " + self.simulation_status)
+        self.step.setText("Step: " + str(self.current_step))
+        self.total.setText("Total: " + str(self.total_steps))
 
 
         

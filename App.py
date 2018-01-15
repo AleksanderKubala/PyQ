@@ -35,6 +35,9 @@ class App(object):
         self.circuit_manager.circuitChanged.connect(self.window.circuit.on_circuit_change)
         self.circuit_manager.circuitResized.connect(self.window.circuit.on_circuitResized)
         self.circuit_manager.resultsRetrieved.connect(self.window.results.on_resultsRetrieved)
+        self.circuit_manager.simulationStarted.connect(self.window.actions.on_simulation_start)
+        self.circuit_manager.simulationUpdated.connect(self.window.actions.on_simulation_update)
+        self.circuit_manager.simulationStopped.connect(self.window.actions.on_simulation_end)
         
 
 
