@@ -18,6 +18,7 @@ class CircuitFrame(GridFrame):
         self.multi_begin = None
         self.current_gate = None
         self.setStyleSheet("background-color: rgb(255, 255, 255)")
+        self.mutable = True
 
     def add_rows(self, count):
         elements = []
@@ -36,21 +37,23 @@ class CircuitFrame(GridFrame):
             widgets[i].destroyGate.connect(self.on_destroyGate)
 
     def on_setGate(self, arg):
-        sender = self.sender()
-        if self.current_gate is not None:
-            if self.current_gate != config.CONTROL and self.current_gate != config.SWAP:
-                request = Addition(self.current_gate, sender.row, sender.col)
-                self.additionRequested.emit(request)
-            else:
-                self.set_multi_qubit_gate(sender)
+        if self.mutable:
+            sender = self.sender()
+            if self.current_gate is not None:
+                if self.current_gate != config.CONTROL and self.current_gate != config.SWAP:
+                    request = Addition(self.current_gate, sender.row, sender.col)
+                    self.additionRequested.emit(request)
+                else:
+                    self.set_multi_qubit_gate(sender)
 
     def on_destroyGate(self):
-        if self.multi_begin is None:
-            sender = self.sender()
-            self.removalRequested.emit(sender.row, sender.col)
-        else:
-            self.deactivate_slot(self.multi_begin)
-            self.multi_begin = None
+        if self.mutable:
+            if self.multi_begin is None:
+                sender = self.sender()
+                self.removalRequested.emit(sender.row, sender.col)
+            else:
+                self.deactivate_slot(self.multi_begin)
+                self.multi_begin = None
 
     def on_circuit_change(self, changes):
         for removal in changes.removed:
@@ -142,6 +145,12 @@ class CircuitFrame(GridFrame):
         if base is None:
             base = source
         return base
+
+    def on_simulation_start(self):
+        self.mutable = False
+
+    def on_simulation_stop(self):
+        self.mutable = True
 
         
 

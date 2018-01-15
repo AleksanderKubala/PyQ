@@ -10,11 +10,13 @@ class RegisterButton(CircuitElement):
         super().__init__(**kwargs)
         self.value = 0
         self.index = index
+        self.mutable = True
 
     def mouseReleaseEvent(self, QMouseEvent):
-        self.value = 1 - self.value
-        self.set_state(str(self.value))
-        self.stateChanged.emit()
+        if self.mutable:
+            self.value = 1 - self.value
+            self.set_state(str(self.value))
+            self.stateChanged.emit()
         
 
 

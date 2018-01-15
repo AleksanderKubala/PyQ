@@ -31,6 +31,15 @@ class GateFrame(GridFrame):
     def get_active_gate(self):
         return self.active_gate.signature
 
+    def on_simulation_start(self):
+        count = self.grid.count()
+        for i in range(count):
+            self.grid.itemAt(i).widget().setDisabled(True)
+
+    def on_simulation_stop(self):
+        count = self.grid.count()
+        for i in range(count):
+            self.grid.itemAt(i).widget().setDisabled(False)
 
 
     

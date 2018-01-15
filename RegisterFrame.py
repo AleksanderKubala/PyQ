@@ -15,6 +15,7 @@ class RegisterFrame(GridFrame):
         self.add_rows(self.size[0])
         self.register = [0]*rows
         self.setStyleSheet("background-color: rgb(255, 255, 255)")
+        self.mutable = True
 
     def add_rows(self, count):
         qubits = []
@@ -34,20 +35,35 @@ class RegisterFrame(GridFrame):
         return value   
 
     def on_state_change(self):
-        sender = self.sender()
-        self.register[sender.index] = sender.value
-        self.registerChanged.emit(self.register_to_int())
+        if self.mutable:
+            sender = self.sender()
+            self.register[sender.index] = sender.value
+            self.registerChanged.emit(self.register_to_int())
 
     def on_qubitCountChange(self, new_size):
-        count = new_size - self.size[0]
-        if count > 0:
-            self.add_rows(count)
-            self.register = self.register + [0]*count
-            self.size[0] = self.size[0] + count
-        elif count < 0:
-            self.remove_grid_line(new_size)
-            self.register = self.register[:new_size]
-        self.registerResized.emit(new_size)
+        if self.mutable:
+            count = new_size - self.size[0]
+            if count > 0:
+                self.add_rows(count)
+                self.register = self.register + [0]*count
+                self.size[0] = self.size[0] + count
+            elif count < 0:
+                self.remove_grid_line(new_size)
+                self.register = self.register[:new_size]
+            self.registerResized.emit(new_size)
+
+    def on_simulation_start(self):
+        self.mutable = False
+        count = self.grid.count()
+        for i in range(count):
+            self.grid.itemAt(i).widget().mutable = False
+
+    def on_simulation_stop(self):
+        self.mutable = True
+        count = self.grid.count()
+        for i in range(count):
+            self.grid.itemAt(i).widget().mutable = True
+
         
         
 
