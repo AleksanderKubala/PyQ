@@ -16,6 +16,10 @@ class Icons(object):
             cls._icons[config.ONE] = cls._set_icon_maps(config.ONE_ICON, config.ONE_SELECT)
             cls._icons[config.EMPTY] = cls._set_icon_maps(config.EMPTY_ICON, config.EMPTY_SELECT)
             cls._icons[config.EMPTY + config.MID] = cls._set_icon_maps(config.EMPTY_MID_ICON, config.EMPTY_MID_SELECT)
+
+            cls._icons[config.EMPTY + config.CLASSICAL] = cls._set_icon_maps(config.EMPTY_CLASSICAL_ICON, config.EMPTY_CLASSICAL_SELECT)
+            cls._icons[config.EMPTY + config.CLASSICAL + config.MID] = cls._set_icon_maps(config.EMPTY_CLASSICAL_MID_ICON, config.EMPTY_CLASSICAL_MID_SELECT)
+
             cls._icons[config.HADAMARD] = cls._set_icon_maps(config.HADAMARD_ICON, config.HADAMARD_SELECT)
             cls._icons[config.HADAMARD + config.DOWN] = cls._set_icon_maps(config.HADAMARD_DOWN_ICON, config.HADAMARD_DOWN_SELECT)
             cls._icons[config.HADAMARD + config.MID] = cls._set_icon_maps(config.HADAMARD_MID_ICON, config.HADAMARD_MID_SELECT)
@@ -55,6 +59,11 @@ class Icons(object):
             cls._icons[config.CONTROL + config.DOWN] = cls._set_icon_maps(config.CONTROL_DOWN_ICON, config.CONTROL_DOWN_SELECT)
             cls._icons[config.CONTROL + config.MID] = cls._set_icon_maps(config.CONTROL_MID_ICON, config.CONTROL_MID_SELECT)
             cls._icons[config.CONTROL + config.UP] = cls._set_icon_maps(config.CONTROL_UP_ICON, config.CONTROL_UP_SELECT)
+
+            cls._icons[config.CONTROL + config.CLASSICAL + config.DOWN] = cls._set_icon_maps(config.CONTROL_CLASSICAL_DOWN_ICON, config.CONTROL_CLASSICAL_DOWN_SELECT)
+            cls._icons[config.CONTROL + config.CLASSICAL + config.MID] = cls._set_icon_maps(config.CONTROL_CLASSICAL_MID_ICON, config.CONTROL_CLASSICAL_MID_SELECT)
+            cls._icons[config.CONTROL + config.CLASSICAL + config.UP] = cls._set_icon_maps(config.CONTROL_CLASSICAL_UP_ICON, config.CONTROL_CLASSICAL_UP_SELECT)
+
             cls._icons[config.MEASUREMENT] = cls._set_icon_maps(config.MEASUREMENT_ICON, config.MEASUREMENT_SELECT)
         if key is not None:
             try:

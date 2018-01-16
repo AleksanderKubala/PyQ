@@ -8,7 +8,7 @@ class CircuitManager(QObject):
     circuitChanged = pyqtSignal(object)
     circuitResized = pyqtSignal(int)
     circuitChangeFailed = pyqtSignal(str, object)
-    resultsRetrieved = pyqtSignal(object)
+    resultsRetrieved = pyqtSignal(object, str)
     simulationStarted = pyqtSignal()
     simulationUpdated = pyqtSignal(object, int, int)
     simulationStopped = pyqtSignal()
@@ -22,7 +22,8 @@ class CircuitManager(QObject):
         self.circuit.start(time)
         self.simulationUpdated.emit(self.circuit.running, self.circuit.next_step - 1, self.circuit.layer_count)
         results = self.circuit.get_results()
-        self.resultsRetrieved.emit(results)
+        measurements = ''.join(self.circuit.measured[i] for i in range(len(self.circuit.measured)))
+        self.resultsRetrieved.emit(results, measurements)
         if not self.circuit.running:
             self.simulationStopped.emit()
 
@@ -30,7 +31,8 @@ class CircuitManager(QObject):
         self.circuit.next()
         self.simulationUpdated.emit(self.circuit.running, self.circuit.next_step - 1, self.circuit.layer_count)
         results = self.circuit.get_results()
-        self.resultsRetrieved.emit(results)
+        measurements = ''.join(self.circuit.measured[i] for i in range(len(self.circuit.measured)))
+        self.resultsRetrieved.emit(results, measurements)
         if not self.circuit.running:
             self.simulationStopped.emit()
 

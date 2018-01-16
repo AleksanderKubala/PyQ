@@ -41,8 +41,9 @@ class CircuitFrame(GridFrame):
             sender = self.sender()
             if self.current_gate is not None:
                 if self.current_gate != config.CONTROL and self.current_gate != config.SWAP:
-                    request = Addition(self.current_gate, sender.row, sender.col)
-                    self.additionRequested.emit(request)
+                    if sender.type != config.CLASSICAL:
+                        request = Addition(self.current_gate, sender.row, sender.col)
+                        self.additionRequested.emit(request)
                 else:
                     self.set_multi_qubit_gate(sender)
 
@@ -60,6 +61,8 @@ class CircuitFrame(GridFrame):
             for index in removal[1]:
                 slot = self.grid.itemAt(index*self.size[1] + removal[0]).widget()
                 slot.links.clear()
+                if slot.state == config.MEASUREMENT:
+                    self.measurement_changes(self.get_all_in_row(slot.row, begin=slot.col+1))
                 slot.set_state(config.EMPTY)
         for addition in changes.added:
             slots = []
@@ -76,9 +79,19 @@ class CircuitFrame(GridFrame):
                 slot = slots[j]
                 self.deactivate_slot(slot)
                 if slot.row in addition[1].controls: slot.set_state(config.CONTROL, modifier)
-                elif slot.row in addition[1].qubits: slot.set_state(addition[1].basegate, modifier)
+                elif slot.row in addition[1].qubits:
+                    slot.set_state(addition[1].basegate, modifier)
+                    if slot.state == config.MEASUREMENT:
+                        self.measurement_changes(self.get_all_in_row(slot.row, begin=slot.col + 1))
                 else: slot.set_state(config.EMPTY, modifier)
                 j += 1
+
+    def measurement_changes(self, widgets):
+        for widget in widgets:
+            if widget.type == config.QUANTUM:
+                widget.set_type(config.CLASSICAL)
+            else:
+                widget.set_type(config.QUANTUM)
 
     def deactivate_slot(self, slot):
         slot.frozen = False
@@ -102,7 +115,7 @@ class CircuitFrame(GridFrame):
 
     def set_multi_qubit_gate(self, source):
         if self.multi_begin is None:
-            if source.state != config.EMPTY or self.current_gate == config.SWAP or source.state != config.MEASUREMENT:
+            if (source.state != config.EMPTY or self.current_gate == config.SWAP) and source.state != config.MEASUREMENT:
                     self.multi_begin = self.get_base(source)
                     source.frozen = True
         else:

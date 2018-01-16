@@ -12,6 +12,7 @@ class CircuitElement(QPushButton):
         self.setIconSize(QSize(48, 48))
         self._state = None
         self._modifier = ""
+        self.type = ""
         self.active = False
         self.frozen = False
 
@@ -21,12 +22,16 @@ class CircuitElement(QPushButton):
 
     @property
     def mod_state(self):
-        return self._state + self._modifier
+        return self._state + self.type + self._modifier
 
     def set_state(self, state, modifier = ""):
         self._state = state
         self._modifier = modifier
-        self.setIcon(Icons.get_icon(self.mod_state));
+        self.setIcon(Icons.get_icon(self.mod_state))
+
+    def set_type(self, type):
+        self.type = type
+        self.setIcon(Icons.get_icon(self.mod_state))
 
     def enterEvent(self, QEvent):
         if self.frozen == False:

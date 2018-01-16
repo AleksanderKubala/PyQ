@@ -4,6 +4,7 @@ from PyQ.GateRequest import GateRequest
 from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.CircuitChanges import CircuitChanges
 from PyQ.ComputeResult import ComputeResult
+from PyQ.Gatename import Gatename
 from sympy import *
 import PyQ.config as cfg
 
@@ -45,6 +46,9 @@ class Circuit(object):
             if gate.first_qubit < 0: raise ValueError("This gate cannot be set on given qubit: {0}.".format(qubits))
             changes.add_removed(layer, self.layers[layer].add_gate(gate))
             changes.add_added(layer, gate)
+            if gate.basegate == Gatename.MEASUREMENT:
+                for i in range(layer + 1, self.layer_count):
+                    changes.add_removed(i, self.layers[i].clean_slots((gate.first_qubit,)))
         return changes
 
     def remove(self, qubits, layer):
@@ -60,7 +64,7 @@ class Circuit(object):
             layer = self.layers[self.next_step - 1]
             if not layer.is_identity:
                 self.result = numpy.dot(layer.transformation, self.result)
-            elif layer.has_measurements():
+            if layer.has_measurements():
                 measurement = layer.measure(self.result)
                 self.result = measurement.state
                 for i in range(len(measurement.bit_number)):
@@ -74,6 +78,7 @@ class Circuit(object):
         if (time <= 0) or (time > self.layer_count): time = self.layer_count
         self.result = self.register.copy()
         self.next_step = 1
+        self.measured = ['?']*self.size
         while (self.next_step <= time) and (self.next_step <= self.layer_count):
             self.next()
 

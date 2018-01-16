@@ -42,6 +42,16 @@ class GridFrame(QFrame):
             self._calculate_new_slot(limits, idx_check)
         return widgets
 
+    def get_all_in_row(self, row, begin = None, end = None):
+        if begin is None:
+            begin = 0
+        if end is None:
+            end = self.size[1]
+        widget_list = []
+        for i in range(begin, end):
+            widget_list.append(self.grid.itemAt(row*self.size[1] + i).widget())
+        return widget_list
+
     #do poprawki
     def _grid_limits(self, widgets):
         row_limit = 0

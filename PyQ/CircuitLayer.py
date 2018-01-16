@@ -54,9 +54,8 @@ class CircuitLayer(object):
     def update(self):
         self.measurement_slots.sort()
         self._add_identities()
-        if self.has_measurements() is False:
-            self._calculate_transformation()
-            self.is_identity = self._check_identity()
+        self._calculate_transformation()
+        self.is_identity = self._check_identity()
 
     def get_gates(self, begin = 0, end = None):
         gate_list = set()
@@ -91,25 +90,39 @@ class CircuitLayer(object):
         measurement_count = len(self.measurement_slots)
         for i in range(2**measurement_count):
             bit_value = ''
-            for j in range(measurement_count - 1, -1, -1):
-                projection = i & (1 << (measurement_count - 1 - j))
+            for j in range(measurement_count -1, -1, -1):
+                projection = (i >> measurement_count - 1 - j) & 1
                 self.gates[self.measurement_slots[j]].set_transformation(projection)
                 bit_value = str(projection) + bit_value
-            self._calculate_transformation()
+            self._calculate_transformation(True)
             measurements.append((bit_value, numpy.dot(self.transformation, register)))
         return measurements
 
-    def _calculate_transformation(self):
+    def _calculate_transformation(self, measurement = False):
         gate_list = []
         last_gate = None
-        for gate in self.gates:
-            if gate is not last_gate:
+        for i in range(len(self.gates)):
+            if self.gates[i] is not last_gate:
+                #gate_list.append(self.gates[i])
+                gate = self.determine_gate(i, measurement)
                 gate_list.append(gate)
                 last_gate = gate
         self.transformation = gate_list[0].transformation
         gate_list.pop(0)
         for gate in gate_list:
             self.transformation = numpy.kron(self.transformation, gate.transformation)
+
+    def determine_gate(self, index, measurement):
+        if measurement:
+            if self.gates[index].basegate == Gatename.MEASUREMENT or self.gates[index].basegate == Gatename.IDENTITY:
+                return self.gates[index]
+            else:
+                return Gate(CircuitLayer.identity, index, str(CircuitLayer.identity.signature))
+        else:
+            if self.gates[index].basegate == Gatename.MEASUREMENT:
+                return Gate(CircuitLayer.identity, index, str(CircuitLayer.identity.signature))
+            else:
+                return self.gates[index]
 
     def _check_identity(self):
         return (self.transformation == numpy.identity(self.transformation.shape[0])).all()
