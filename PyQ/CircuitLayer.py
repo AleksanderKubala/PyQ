@@ -5,6 +5,7 @@ from PyQ.Gate import Gate
 from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.Gatename import Gatename
 from PyQ.MeasurementResult import MeasurementResult
+from PyQ.RandomValueGenerator import RandomValueGenerator
 
 
 class CircuitLayer(object):
@@ -76,13 +77,16 @@ class CircuitLayer(object):
     def measure(self, register):
         measurements = self._calculate_measurements(register)
         probabilities = [numpy.dot(register.transpose(), measurement[1]) for measurement in measurements]
-        bound = 0
-        roll = random.uniform(0, 1)
-        for i in range(0, len(probabilities)):
-            bound = bound + probabilities[i]
-            if roll <= bound:
-                state = (measurements[i])[1]/sympy.sqrt(probabilities[i])
-                return MeasurementResult(state, self.measurement_slots, (measurements[i])[0])
+        #bound = 0
+        #roll = random.uniform(0, 1)
+        #for i in range(0, len(probabilities)):
+            #bound = bound + probabilities[i]
+            #if roll <= bound:
+                #state = (measurements[i])[1]/sympy.sqrt(probabilities[i])
+                #return MeasurementResult(state, self.measurement_slots, (measurements[i])[0])
+        index = RandomValueGenerator.discrete_distribution(probabilities)
+        state = (measurements[index])[1]/sympy.sqrt(probabilities[index])
+        return MeasurementResult(state, self.measurement_slots, (measurements[index])[0])
 
     def _calculate_measurements(self, register):
         measurements = []
@@ -103,7 +107,6 @@ class CircuitLayer(object):
         last_gate = None
         for i in range(len(self.gates)):
             if self.gates[i] is not last_gate:
-                #gate_list.append(self.gates[i])
                 gate = self.determine_gate(i, measurement)
                 gate_list.append(gate)
                 last_gate = gate

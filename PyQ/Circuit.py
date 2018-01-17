@@ -5,6 +5,7 @@ from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.CircuitChanges import CircuitChanges
 from PyQ.ComputeResult import ComputeResult
 from PyQ.Gatename import Gatename
+from PyQ.DisturbanceGenerator import DisturbanceGenerator, RandomValueGenerator
 from sympy import *
 import PyQ.config as cfg
 
@@ -35,6 +36,8 @@ class Circuit(object):
         self.next_step = 1
         self.running = False
         self.measured = ['?']*self.size
+        self.ideal = True
+        self.disturbance_probability = self.set_disturbance_probability(cfg.DISTURBANCE_PROBABILITY)
 
     def add(self, gate, qubits, layer, controls = None):
         qubits, layer = self._check_requested_params(qubits, layer)
@@ -64,6 +67,10 @@ class Circuit(object):
             layer = self.layers[self.next_step - 1]
             if not layer.is_identity:
                 self.result = numpy.dot(layer.transformation, self.result)
+            if not self.ideal:
+                if RandomValueGenerator.binary_distribution(cfg.DISTURBANCE_PROBABILITY):
+                    disturbance = DisturbanceGenerator.create_disturbance(self.size)
+                    self.result = numpy.dot(disturbance, self.result)
             if layer.has_measurements():
                 measurement = layer.measure(self.result)
                 self.result = measurement.state
@@ -124,8 +131,21 @@ class Circuit(object):
                 amplitude = self.result.item(i)
                 single_result = "{0:b}".format(i)
                 single_result = "0"*(self.size - len(single_result)) + single_result
-                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(self.result.item(i))**2)*100, 3)))
+                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(N(amplitude,6))**2)*100, 5)))
         return results
+
+    def set_ideal(self, ideal, probability=cfg.DISTURBANCE_PROBABILITY):
+        if not ideal:
+            self.set_disturbance_probability(probability)
+            self.ideal = False
+        else:
+            self.ideal = True
+
+    def set_disturbance_probability(self, probability):
+        if probability < 0 or probability > 1:
+            return ValueError("Probability value out of range (0, 1)")
+        else:
+            self.disturbance_probability = probability
 
     def _clear_register(self, value = 0):
         for i in range(2**self.size):
