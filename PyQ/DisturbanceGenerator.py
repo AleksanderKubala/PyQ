@@ -46,7 +46,7 @@ class DisturbanceGenerator(object):
         return s.rad(int(angle))
 
     @classmethod
-    def set_qubit_disturbance(cls, value):
+    def set_qubit_disturbance_probability(cls, value):
         if value < 0 or value > 1:
             raise ValueError("Probability out of range (0,1)")
         else:

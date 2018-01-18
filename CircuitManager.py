@@ -67,7 +67,7 @@ class CircuitManager(QObject):
         self.circuit.set_disturbance_probability(probability)
 
     def on_qubit_dist_probability_changed(self, probability):
-        DisturbanceGenerator.set_qubit_disturbance(probability)
+        DisturbanceGenerator.set_qubit_disturbance_probability(probability)
 
     def on_rotation_probability_changed(self, probability):
         DisturbanceGenerator.set_rotation_probability(probability)

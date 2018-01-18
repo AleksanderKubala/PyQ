@@ -132,7 +132,7 @@ class Circuit(object):
                 amplitude = self.result.item(i)
                 single_result = "{0:b}".format(i)
                 single_result = "0"*(self.size - len(single_result)) + single_result
-                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(N(amplitude,6))**2)*100, 5)))
+                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(N(amplitude))**2)*100, 5)))
         return results
 
     def set_ideal(self, ideal, probability=cfg.DISTURBANCE_PROBABILITY):
