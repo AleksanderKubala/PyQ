@@ -156,8 +156,7 @@ class ActionFrame(GridFrame):
             self.disturbance_prob.setDisabled(True)
             self.qubit_disturbance.setDisabled(True)
             self.rotation_prob.setDisabled(True)
-            self.allowDisturbances.emit(False)
-            self.allowDisturbances.emit(True)
+            self.allowDisturbances.emit(True, float(self.disturbance_prob.text()))
 
     def on_disturbance_prob_change(self):
         result = self.prob_validator.validate(self.disturbance_prob.text(), 0)
