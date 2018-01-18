@@ -1,4 +1,5 @@
 from PyQ.Circuit import Circuit
+from PyQ.DisturbanceGenerator import DisturbanceGenerator
 from PyQt5.QtCore import pyqtSignal, QObject
 from Addition import Addition 
 
@@ -58,6 +59,18 @@ class CircuitManager(QObject):
         results = self.circuit.resize(new_size)
         self.circuitChanged.emit(results)
         self.circuitResized.emit(new_size)
+        
+    def on_allow_disturbances(self, allowed, probability):
+        self.circuit.set_ideal(allowed, probability)
+
+    def on_disturbance_prob_changed(self, probability):
+        self.circuit.set_disturbance_probability(probability)
+
+    def on_qubit_dist_probability_changed(self, probability):
+        DisturbanceGenerator.set_qubit_disturbance(probability)
+
+    def on_rotation_probability_changed(self, probability):
+        DisturbanceGenerator.set_rotation_probability(probability)
         
 
 

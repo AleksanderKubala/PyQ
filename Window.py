@@ -58,4 +58,5 @@ class Window(QWidget):
         grid.addWidget(circuitframe, 0, 3, 6, 9)
         grid.addWidget(self.actions, 6, 3, 2, 9)
 
-        self.setGeometry(300, 300, 1024, 768)
+        self.setGeometry(300, 300, config.win_width, config.win_height)
+        self.setFixedSize(config.win_width, config.win_height)

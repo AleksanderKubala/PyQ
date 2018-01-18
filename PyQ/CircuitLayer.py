@@ -1,6 +1,5 @@
 import numpy
 import sympy
-import random
 from PyQ.Gate import Gate
 from PyQ.GateInfoRegister import GateInfoRegister
 from PyQ.Gatename import Gatename
@@ -76,7 +75,7 @@ class CircuitLayer(object):
 
     def measure(self, register):
         measurements = self._calculate_measurements(register)
-        probabilities = [numpy.dot(register.transpose(), measurement[1]) for measurement in measurements]
+        probabilities = [sympy.N((numpy.dot(register.transpose().conj(), measurement[1]))) for measurement in measurements]
         #bound = 0
         #roll = random.uniform(0, 1)
         #for i in range(0, len(probabilities)):

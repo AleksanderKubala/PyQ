@@ -79,6 +79,7 @@ class Circuit(object):
             self.next_step += 1
             if self.next_step > self.layer_count:
                 self.stop()
+            simplify(self.result)
 
     def start(self, time = 0):
         self.running = True
@@ -143,7 +144,7 @@ class Circuit(object):
 
     def set_disturbance_probability(self, probability):
         if probability < 0 or probability > 1:
-            return ValueError("Probability value out of range (0, 1)")
+            raise ValueError("Probability value out of range (0, 1)")
         else:
             self.disturbance_probability = probability
 

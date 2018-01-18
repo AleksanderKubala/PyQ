@@ -8,15 +8,17 @@ from PyQ.RandomValueGenerator import RandomValueGenerator
 class DisturbanceGenerator(object):
 
     Identity = GateInfoRegister.instance().register[Gatename.IDENTITY]
+    qubit_disturbance = cfg.QUBIT_DISTURBANCE_PROBABILITY
+    rotation_probability = cfg.ROTATION_PROBABILITY
 
     @classmethod
     def create_disturbance(cls, size):
         rotation_matrices = [cls.Identity.transformation]*size
         rotation_functions = [cls.rotation_z, cls.rotation_y, cls.rotation_x]
         for i in range(size):
-            if RandomValueGenerator.binary_distribution(cfg.QUBIT_DISTURBANCE_PROBABILITY):
+            if RandomValueGenerator.binary_distribution(cls.qubit_disturbance):
                 for rotation_function in rotation_functions:
-                    if RandomValueGenerator.binary_distribution(cfg.ROTATION_PROBABILITY):
+                    if RandomValueGenerator.binary_distribution(cls.rotation_probability):
                         rotation_matrices[i] = n.dot(rotation_function(), rotation_matrices[i])
         rotation = rotation_matrices[0]
         for i in range(1, size):
@@ -42,5 +44,19 @@ class DisturbanceGenerator(object):
     def get_angle(cls):
         angle = RandomValueGenerator.uniform(cfg.DISTURBANCE_BOUNDS[0], cfg.DISTURBANCE_BOUNDS[1])
         return s.rad(int(angle))
+
+    @classmethod
+    def set_qubit_disturbance(cls, value):
+        if value < 0 or value > 1:
+            raise ValueError("Probability out of range (0,1)")
+        else:
+            cls.qubit_disturbance = value
+
+    @classmethod
+    def set_rotation_probability(cls, value):
+        if value < 0 or value > 1:
+            raise ValueError("Probability out of range (0,1)")
+        else:
+            cls.rotation_probability = value
 
 

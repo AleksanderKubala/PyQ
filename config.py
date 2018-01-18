@@ -11,6 +11,9 @@ figure_dpi = 96
 win_width = 1024
 win_height = 768
 
+latex_win_width = 300
+latex_win_height = 100
+
 #..........icon relations.................
 icon_path = "./resources/"
 icon_select = "_select"
@@ -20,6 +23,9 @@ icon_extension = ".bmp"
 INITIAL_QUBITS = config.DEFAULT_SIZE
 INITIAL_LAYERS_COUNT = config.DEFAULT_LAYER_COUNT
 SIZE_RESTRICTION = config.SIZE_RESTRICTION
+DISTURBANCE_PROBABILITY = config.DISTURBANCE_PROBABILITY
+QUBIT_DISTURBANCE_PROBABILITY = config.QUBIT_DISTURBANCE_PROBABILITY
+ROTATION_PROBABILITY = config.ROTATION_PROBABILITY
 
 #...............slot states...............
 HADAMARD = Gatename.H
