@@ -12,16 +12,17 @@ class DisturbanceGenerator(object):
     rotation_probability = cfg.ROTATION_PROBABILITY
 
     @classmethod
-    def create_disturbance(cls, size):
-        rotation_matrices = [cls.Identity.transformation]*size
+    def create_disturbance(cls, qubits):
+        rotation_matrices = [cls.Identity.transformation]*len(qubits)
         rotation_functions = [cls.rotation_z, cls.rotation_y, cls.rotation_x]
-        for i in range(size):
-            if RandomValueGenerator.binary_distribution(cls.qubit_disturbance):
-                for rotation_function in rotation_functions:
-                    if RandomValueGenerator.binary_distribution(cls.rotation_probability):
-                        rotation_matrices[i] = n.dot(rotation_function(), rotation_matrices[i])
+        for i in range(len(qubits)):
+            if qubits[i] == '?':
+                if RandomValueGenerator.binary_distribution(cls.qubit_disturbance):
+                    for rotation_function in rotation_functions:
+                        if RandomValueGenerator.binary_distribution(cls.rotation_probability):
+                            rotation_matrices[i] = n.dot(rotation_function(), rotation_matrices[i])
         rotation = rotation_matrices[0]
-        for i in range(1, size):
+        for i in range(1, len(qubits)):
             rotation = n.kron(rotation, rotation_matrices[i])
         return rotation
 

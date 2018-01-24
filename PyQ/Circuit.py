@@ -73,7 +73,7 @@ class Circuit(object):
                 self.result = numpy.dot(transformation, self.result)
             if not self.ideal:
                 if RandomValueGenerator.binary_distribution(cfg.DISTURBANCE_PROBABILITY):
-                    disturbance = DisturbanceGenerator.create_disturbance(self.size)
+                    disturbance = DisturbanceGenerator.create_disturbance(self.measured)
                     self.result = numpy.dot(disturbance, self.result)
             if layer.has_measurements():
                 measurement = layer.measure(self.result)
