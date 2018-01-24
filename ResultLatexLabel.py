@@ -16,7 +16,7 @@ class ResultLatexLabel(FigureCanvasQTAgg):
         r, g, b, a = color.getRgbF()
         figure = Figure(dpi=figure_dpi, edgecolor=(r,g,b), facecolor=(r,g,b))
         figure.clear()
-        figure.suptitle(r'$' + latex(sympify(value)) + '$')
+        figure.suptitle(r'$' + latex(sympify(value)) + '$', y=0.875, fontsize=10)
         #figure.set_figwidth(label_width/figure_dpi)
         figure.set_figheight(label_height/figure_dpi)
         return figure

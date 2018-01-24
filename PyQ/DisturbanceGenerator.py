@@ -28,17 +28,17 @@ class DisturbanceGenerator(object):
     @classmethod
     def rotation_x(cls):
         radians = cls.get_angle()
-        return n.matrix([[s.cos(radians/2), -s.I*s.sin(radians/2)], [-s.I*s.sin(radians/2), s.cos(radians/2)]])
+        return n.matrix([[s.N(s.cos(radians/2)), s.N(-s.I*s.sin(radians/2))], [s.N(-s.I*s.sin(radians/2)), s.N(s.cos(radians/2))]])
 
     @classmethod
     def rotation_y(cls):
         radians = cls.get_angle()
-        return n.matrix([[s.cos(radians/2), -s.sin(radians/2)], [s.sin(radians/2), s.cos(radians/2)]])
+        return n.matrix([[s.N(s.cos(radians/2)), s.N(-s.sin(radians/2))], [s.N(s.sin(radians/2)), s.N(s.cos(radians/2))]])
 
     @classmethod
     def rotation_z(cls):
         radians = cls.get_angle()
-        return n.matrix([[s.exp(-s.I*(radians/2)), 0], [0, s.exp(s.I*(radians/2))]])
+        return n.matrix([[s.N(s.exp(-s.I*(radians/2))), 0], [0, s.N(s.exp(s.I*(radians/2)))]])
 
     @classmethod
     def get_angle(cls):

@@ -1,4 +1,5 @@
 import random
+import numpy
 
 class RandomValueGenerator(object):
 
@@ -15,7 +16,7 @@ class RandomValueGenerator(object):
         while bound <= roll:
             bound = bound + probabilities[i]
             i += 1
-            if bound > 1:
+            if round(bound, 5) > 1.00000:
                 raise ValueError("Probabilities are out of range (0, 1)")
         if values is None:
             return i-1

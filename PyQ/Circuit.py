@@ -66,7 +66,11 @@ class Circuit(object):
         else:
             layer = self.layers[self.next_step - 1]
             if not layer.is_identity:
-                self.result = numpy.dot(layer.transformation, self.result)
+                transformation = layer.transformation.copy()
+                if not self.ideal:
+                    for i in range(transformation.size):
+                        transformation.put(i, N(transformation.item(i)))
+                self.result = numpy.dot(transformation, self.result)
             if not self.ideal:
                 if RandomValueGenerator.binary_distribution(cfg.DISTURBANCE_PROBABILITY):
                     disturbance = DisturbanceGenerator.create_disturbance(self.size)
@@ -82,6 +86,9 @@ class Circuit(object):
             simplify(self.result)
 
     def start(self, time = 0):
+        if not self.ideal:
+            for i in range(self.result.size):
+                self.result.put(i, N(self.result.item(i), 5))
         self.running = True
         if (time <= 0) or (time > self.layer_count): time = self.layer_count
         self.result = self.register.copy()
@@ -130,9 +137,16 @@ class Circuit(object):
         for i in range(2**self.size):
             if self.result.item(i) != 0:
                 amplitude = self.result.item(i)
+                if self.ideal:
+                    amplitude = nsimplify(amplitude)
+                else:
+                    amplitude = N(amplitude, 5)
+                probability = round((numpy.absolute(N(amplitude))**2)*100, 5)
+                if probability > 100.0:
+                    probability = 100.0
                 single_result = "{0:b}".format(i)
                 single_result = "0"*(self.size - len(single_result)) + single_result
-                results.append(ComputeResult(nsimplify(amplitude), single_result, round((numpy.absolute(N(amplitude))**2)*100, 5)))
+                results.append(ComputeResult(amplitude, single_result, probability))
         return results
 
     def set_ideal(self, ideal, probability=cfg.DISTURBANCE_PROBABILITY):
